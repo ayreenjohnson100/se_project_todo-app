@@ -1,4 +1,4 @@
-import { validationConfig } from "../utils/constants.js";
+import { checkInputValidity, toggleButtonState } from "../scripts/validate.js";
 
 class FormValidator {
   constructor(settings, formEl) {
@@ -7,14 +7,13 @@ class FormValidator {
     this._inputSelector = settings.inputSelector;
     this._submitButtonSelector = settings.submitButtonSelector;
     this._inactiveButtonClass = settings.inactiveButtonClass;
+    this._inputList = [];
   }
 
-  // TODO #1 — check a single input
   checkInputValidity(inputElement) {
     checkInputValidity(this._formEl, inputElement, this._settings);
   }
 
-  // TODO #2 — wire listeners + button state
   setEventListeners() {
     this._inputList = Array.from(
       this._formEl.querySelectorAll(this._inputSelector)
@@ -34,11 +33,23 @@ class FormValidator {
   }
 
   enableValidation() {
-    this._formEl.addEventListener("submit", (evt) => {
-      evt.preventDefault();
-    });
+    this._formEl.addEventListener("submit", (e) => e.preventDefault());
     this.setEventListeners();
+  }
+
+  resetValidation() {
+    const buttonElement = this._formEl.querySelector(
+      this._submitButtonSelector
+    );
+    toggleButtonState(this._inputList, buttonElement, this._settings);
+
+    this._inputList.forEach((input) => {
+      input.value = "";
+      const err = this._formEl.querySelector(`#${input.id}-error`);
+      if (err) err.textContent = "";
+      input.classList.remove(this._settings.inputErrorClass);
+    });
   }
 }
 
-export default FormValidator;
+export default FormValidator; // <-- IMPORTANT
