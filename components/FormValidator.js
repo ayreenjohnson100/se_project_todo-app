@@ -1,5 +1,3 @@
-import { checkInputValidity, toggleButtonState } from "../scripts/validate.js";
-
 class FormValidator {
   constructor(settings, formEl) {
     this._settings = settings;
@@ -51,5 +49,3 @@ class FormValidator {
     });
   }
 }
-
-export default FormValidator; // <-- IMPORTANT
